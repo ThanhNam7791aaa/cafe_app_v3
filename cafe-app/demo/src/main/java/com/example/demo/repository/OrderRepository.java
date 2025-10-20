@@ -40,4 +40,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
      List<Order> findByCustomerId(Long customerId);
 
+    // Optimized query to get dashboard statistics in one go
+    @Query("SELECT " +
+           "COUNT(o) as totalOrders, " +
+           "COALESCE(SUM(CASE WHEN o.orderDate >= ?1 AND o.orderDate < ?2 AND o.status = 'COMPLETED' THEN o.totalAmount ELSE 0 END), 0.0) as todayRevenue, " +
+           "COUNT(DISTINCT o.customer) as totalCustomers " +
+           "FROM Order o")
+    Object[] getDashboardStats(LocalDateTime startOfDay, LocalDateTime endOfDay);
+
 }

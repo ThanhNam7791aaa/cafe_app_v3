@@ -45,8 +45,8 @@ public class MenuService {
      */
     @Transactional
     public MenuItem saveMenuItem(MenuItem menuItem) {
-    // Sửa lại validation để kiểm tra đúng thuộc tính 'price'
-    if (menuItem.getPrice() == null) {
+    // Sửa lại validation để kiểm tra đúng thuộc tính 'priceM'
+    if (menuItem.getPriceM() == null) {
         throw new IllegalArgumentException("Giá cho size vừa (M) không được để trống.");
     }
     

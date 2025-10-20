@@ -106,7 +106,7 @@
                         <td>${item.id}</td>
                         <td>${item.name}</td>
                         <td>${item.category}</td>
-                        <td>${formatCurrency(item.priceS)} / <strong>${formatCurrency(item.price)}</strong> / ${formatCurrency(item.priceL)}</td>
+                        <td>${formatCurrency(item.priceS)} / <strong>${formatCurrency(item.priceM)}</strong> / ${formatCurrency(item.priceL)}</td>
                         <td>${item.available ? '<span class="badge bg-success">Có sẵn</span>' : '<span class="badge bg-danger">Hết hàng</span>'}</td>
                         <td>
                             <button class="btn btn-sm btn-warning" onclick='editItem(${JSON.stringify(item)})'>Sửa</button>
@@ -125,7 +125,7 @@
             document.getElementById('name').value = item.name;
             document.getElementById('category').value = item.category;
             document.getElementById('priceS').value = item.priceS;
-            document.getElementById('price').value = item.price;
+            document.getElementById('price').value = item.priceM;
             document.getElementById('priceL').value = item.priceL;
             document.getElementById('description').value = item.description;
             document.getElementById('image').value = item.image;
@@ -141,7 +141,7 @@
                 name: document.getElementById('name').value,
                 category: document.getElementById('category').value,
                 priceS: document.getElementById('priceS').value ? parseFloat(document.getElementById('priceS').value) : null,
-                price: parseFloat(document.getElementById('price').value),
+                priceM: parseFloat(document.getElementById('price').value),
                 priceL: document.getElementById('priceL').value ? parseFloat(document.getElementById('priceL').value) : null,
                 description: document.getElementById('description').value,
                 image: document.getElementById('image').value,

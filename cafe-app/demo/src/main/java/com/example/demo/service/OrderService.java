@@ -9,6 +9,8 @@ import com.example.demo.repository.CustomerRepository;
 import com.example.demo.repository.MenuRepository;
 import com.example.demo.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +44,7 @@ public class OrderService {
      * Tạo hoặc cập nhật một đơn hàng, xử lý thanh toán và hoàn tất.
      */
     @Transactional
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     public Order createOrUpdateOrder(OrderRequestDto orderRequest) {
         if (orderRequest == null || orderRequest.getItems() == null || orderRequest.getItems().isEmpty()) {
             throw new IllegalArgumentException("Đơn hàng không được để trống.");
@@ -242,15 +245,18 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "dashboardStats", key = "'dashboard'", unless = "#result == null")
     public DashboardStatsDto getDashboardStatistics() {
-        Long totalOrders = orderRepository.count();
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
         LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
-        Double todayRevenue = orderRepository.getDailyRevenue(startOfDay, endOfDay);
-        if (todayRevenue == null) todayRevenue = 0.0;
+        
+        // Use optimized single query for dashboard stats
+        Object[] dashboardStats = orderRepository.getDashboardStats(startOfDay, endOfDay);
+        Long totalOrders = ((Number) dashboardStats[0]).longValue();
+        Double todayRevenue = (Double) dashboardStats[1];
+        Long totalCustomers = ((Number) dashboardStats[2]).longValue();
 
         Long totalProducts = menuRepository.count();
-        Long totalCustomers = customerRepository.count();
 
         List<Order> latestOrdersEntities = orderRepository.findTop5ByOrderByOrderDateDesc();
         List<LatestOrderDto> latestOrders = latestOrdersEntities.stream()
