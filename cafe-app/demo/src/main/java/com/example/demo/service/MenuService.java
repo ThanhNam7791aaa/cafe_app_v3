@@ -45,16 +45,23 @@ public class MenuService {
      */
     @Transactional
     public MenuItem saveMenuItem(MenuItem menuItem) {
-    // Sửa lại validation để kiểm tra đúng thuộc tính 'price'
-    if (menuItem.getPrice() == null) {
-        throw new IllegalArgumentException("Giá cho size vừa (M) không được để trống.");
-    }
-    
-    // Đảm bảo ID không bị ghi đè khi tạo mới
-    if (menuItem.getId() != null && !menuRepository.existsById(menuItem.getId())) {
-         throw new EntityNotFoundException("Không tìm thấy món ăn với ID: " + menuItem.getId() + " để cập nhật.");
-    }
-    return menuRepository.save(menuItem);
+        // Validation để kiểm tra các trường bắt buộc
+        if (menuItem.getName() == null || menuItem.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Tên món không được để trống.");
+        }
+        if (menuItem.getCategory() == null || menuItem.getCategory().trim().isEmpty()) {
+            throw new IllegalArgumentException("Danh mục không được để trống.");
+        }
+        // Sửa lại validation để kiểm tra đúng thuộc tính 'price'
+        if (menuItem.getPrice() == null) {
+            throw new IllegalArgumentException("Giá cho size vừa (M) không được để trống.");
+        }
+
+        // Kiểm tra ID cho cập nhật: nếu ID không null thì phải tồn tại
+        if (menuItem.getId() != null && !menuRepository.existsById(menuItem.getId())) {
+            throw new EntityNotFoundException("Không tìm thấy món ăn với ID: " + menuItem.getId() + " để cập nhật.");
+        }
+        return menuRepository.save(menuItem);
     }
     /**
      * Xóa một món khỏi menu theo ID.
@@ -65,6 +72,7 @@ public class MenuService {
         if (!menuRepository.existsById(id)) {
             throw new EntityNotFoundException("Không tìm thấy món ăn với ID: " + id + " để xóa.");
         }
+        // JPA với @OnDelete(action = OnDeleteAction.SET_NULL) sẽ tự động xử lý
         menuRepository.deleteById(id);
     }
 

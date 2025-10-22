@@ -76,6 +76,8 @@ public class MenuController {
     @PostMapping
     public ResponseEntity<MenuItem> addMenuItem(@RequestBody MenuItem menuItem) {
         try {
+            // Đảm bảo ID là null để tạo mới
+            menuItem.setId(null);
             // Tên phương thức đã đúng với MenuService của bạn
             MenuItem savedItem = menuService.saveMenuItem(menuItem);
             return new ResponseEntity<>(savedItem, HttpStatus.CREATED);

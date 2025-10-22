@@ -47,9 +47,9 @@
         const apiUrl = '/api/admin/menu';
         let menuItemsCache = [];
 
-        function showAlert(message, type = 'success') { /* ... */ }
-        function formatCurrency(amount) { /* ... */ }
-        function resetForm() { /* ... */ }
+        function showAlert(message, type = 'success') { document.getElementById('alertBox').className = 'alert alert-' + type; document.getElementById('alertBox').innerHTML = message; document.getElementById('alertBox').style.display = 'block'; setTimeout(() => { document.getElementById('alertBox').style.display = 'none'; }, 5000); }
+        function formatCurrency(amount) { return (amount || 0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }); }
+        function resetForm() { document.getElementById('menuForm').reset(); document.getElementById('id').value = ''; }
 
         async function loadMenu() {
             const tableBody = document.getElementById("menuTableBody");
@@ -134,7 +134,21 @@
             }
         }
         
-        async function deleteItem(id) { /* ... */ }
+        async function deleteItem(id) {
+            if (!confirm('Bạn có chắc chắn muốn xóa món này không?')) return;
+            try {
+                const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`${response.status} - ${errorText}`);
+                }
+                showAlert('Đã xóa món thành công!', 'success');
+                await loadMenu();
+            } catch (error) {
+                console.error('Lỗi xóa món:', error);
+                showAlert('Lỗi khi xóa món: ' + error.message, 'danger');
+            }
+        }
         function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
         
         document.addEventListener('DOMContentLoaded', () => {

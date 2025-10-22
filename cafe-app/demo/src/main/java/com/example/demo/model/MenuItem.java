@@ -83,13 +83,17 @@ public class MenuItem {
      * @return Giá tương ứng với size, mặc định là size M nếu size không hợp lệ
      */
     public Double getPriceBySize(String size) {
+        if (size == null) {
+            return price; // Mặc định size M
+        }
         switch (size.toUpperCase()) {
             case "S":
-                return priceS;
+                return priceS != null ? priceS : price; // Quay về M nếu S null
             case "L":
-                return priceL;
+                return priceL != null ? priceL : price; // Quay về M nếu L null
             case "M":
             default:
                 return price; // Trả về giá size M nếu size không hợp lệ
         }
-} }
+    }
+}
