@@ -45,6 +45,7 @@ public class MenuService {
      */
     @Transactional
     public MenuItem saveMenuItem(MenuItem menuItem) {
+<<<<<<< HEAD
         // Validation để kiểm tra các trường bắt buộc
         if (menuItem.getName() == null || menuItem.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("Tên món không được để trống.");
@@ -62,6 +63,18 @@ public class MenuService {
             throw new EntityNotFoundException("Không tìm thấy món ăn với ID: " + menuItem.getId() + " để cập nhật.");
         }
         return menuRepository.save(menuItem);
+=======
+    // Sửa lại validation để kiểm tra đúng thuộc tính 'priceM'
+    if (menuItem.getPriceM() == null) {
+        throw new IllegalArgumentException("Giá cho size vừa (M) không được để trống.");
+    }
+    
+    // Đảm bảo ID không bị ghi đè khi tạo mới
+    if (menuItem.getId() != null && !menuRepository.existsById(menuItem.getId())) {
+         throw new EntityNotFoundException("Không tìm thấy món ăn với ID: " + menuItem.getId() + " để cập nhật.");
+    }
+    return menuRepository.save(menuItem);
+>>>>>>> 926f7cc6e55184fb29bab12d15e51cedbac3c8c0
     }
     /**
      * Xóa một món khỏi menu theo ID.

@@ -67,9 +67,15 @@
                     const row = tableBody.insertRow();
                     row.innerHTML = `
                         <td>${item.id}</td>
+<<<<<<< HEAD
                         <td><strong>${escapeHtml(item.name)}</strong></td>
                         <td><span class="badge bg-info">${escapeHtml(item.category)}</span></td>
                         <td>${formatCurrency(item.priceS)} / <strong class="text-primary">${formatCurrency(item.price)}</strong> / ${formatCurrency(item.priceL)}</td>
+=======
+                        <td>${item.name}</td>
+                        <td>${item.category}</td>
+                        <td>${formatCurrency(item.priceS)} / <strong>${formatCurrency(item.priceM)}</strong> / ${formatCurrency(item.priceL)}</td>
+>>>>>>> 926f7cc6e55184fb29bab12d15e51cedbac3c8c0
                         <td>${item.available ? '<span class="badge bg-success">Có sẵn</span>' : '<span class="badge bg-danger">Hết hàng</span>'}</td>
                         <td>
                             <button class="btn btn-sm btn-warning me-1" onclick="editItemById(${item.id})"><i class="bi bi-pencil"></i> Sửa</button>
@@ -83,6 +89,7 @@
             }
         }
 
+<<<<<<< HEAD
         function editItemById(id) {
             const item = menuItemsCache.find(i => i.id === id);
             if (!item) { showAlert('Không tìm thấy món!', 'danger'); return; }
@@ -96,6 +103,19 @@
             document.getElementById('image').value = item.image || '';
             document.getElementById('available').checked = item.available !== false;
             window.scrollTo({ top: 0, behavior: 'smooth' });
+=======
+        function editItem(item) {
+            document.getElementById('id').value = item.id;
+            document.getElementById('name').value = item.name;
+            document.getElementById('category').value = item.category;
+            document.getElementById('priceS').value = item.priceS;
+            document.getElementById('price').value = item.priceM;
+            document.getElementById('priceL').value = item.priceL;
+            document.getElementById('description').value = item.description;
+            document.getElementById('image').value = item.image;
+            document.getElementById('available').checked = item.available;
+            window.scrollTo(0, 0);
+>>>>>>> 926f7cc6e55184fb29bab12d15e51cedbac3c8c0
         }
 
         async function handleSubmit(event) {
@@ -105,7 +125,7 @@
                 name: document.getElementById('name').value.trim(),
                 category: document.getElementById('category').value,
                 priceS: document.getElementById('priceS').value ? parseFloat(document.getElementById('priceS').value) : null,
-                price: parseFloat(document.getElementById('price').value),
+                priceM: parseFloat(document.getElementById('price').value),
                 priceL: document.getElementById('priceL').value ? parseFloat(document.getElementById('priceL').value) : null,
                 description: document.getElementById('description').value.trim(),
                 image: document.getElementById('image').value.trim(),
